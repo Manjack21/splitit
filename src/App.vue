@@ -9,6 +9,12 @@
         <div class="w3-bar-item w3-button w3-green" v-on:click="showModal('newParticipantModal')">
             <img src="user.png" style="height:5rem;"> Add User
         </div>
+        <div class="w3-bar-item w3-button w3-green" v-on:click="exportData()">
+            <img src="export.png" style="height:5rem;"> Export
+        </div>
+        <div class="w3-bar-item w3-button w3-green" v-on:click="showModal('importModal')">
+            <img src="import.png" style="height:5rem;"> Import
+        </div>
         <div class="w3-bar-item w3-button w3-red" v-on:click="resetData()">
             <img src="delete.png" style="height:5rem;"> Clear Data
         </div>
@@ -73,6 +79,21 @@
         <p>
           <button class="w3-btn w3-block w3-green" v-on:click="addEntry(); hideModal('newBuyModal');">
             Yes, i've buyed that!
+          </button>
+        </p>
+      </div>
+    </div>
+    
+    <div id="importModal" class="w3-modal">
+      <div class="w3-modal-content w3-padding" style="width:20rem; padding-top:3rem;">
+        <span v-on:click="hideModal('importModal');" class="w3-button w3-display-topright">&times;</span>
+        <p>
+          <label for="importFile">Save File: </label>
+          <input class="w3-input w3-border" type="file" id="importFile" name="importFile">
+        </p>
+        <p>
+          <button class="w3-btn w3-block w3-green" v-on:click="importData(); hideModal('importModal');">
+            Import
           </button>
         </p>
       </div>
@@ -199,11 +220,38 @@ export default {
     showModal(name) {
       document.getElementById(name).style.display = "block"
     },
-    saveData(){
-      localStorage.setItem('splitItPool', JSON.stringify(this.$data));
+    saveData(content){
+      if(content === undefined) content = JSON.stringify(this.$data);
+
+      console.log(content);
+      localStorage.setItem('splitItPool', content);
     },
     resetData(){
       localStorage.removeItem('splitItPool');
+    },
+    exportData(){
+      var element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.$data)));
+      element.setAttribute('download', 'splitit.data.json');
+
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+
+      document.body.removeChild(element);
+    },
+    importData(){
+      var fname = document.getElementById("importFile").files[0];
+      
+      var saveData = this.saveData;
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var contents = e.target.result;
+        saveData(contents);
+      };
+      reader.readAsText(fname);
+      this.hideModal("importModal")
     }
   }
 }
