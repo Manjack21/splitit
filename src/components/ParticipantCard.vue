@@ -6,13 +6,13 @@
             <p><currency :value="totalAmount" /></p>
             
             <div class="w3-block w3-button w3-green" v-on:click="$emit('addBuyEntry', participant)">
-                I've buyed something
+                <i18n text-id="btnBuy" />
             </div>
             <div class="w3-block w3-button w3-green" v-on:click="$emit('addRepayEntry', participant)">
-                I repayed some money
+                <i18n text-id="btnRepay" />
             </div>
             <div class="w3-block w3-button w3-green" v-on:click="toggleDetails()">
-                Show my depts
+                <i18n text-id="btnDepts" />
             </div>
 
             <span class="w3-button w3-display-topright w3-xlarge" @click="$emit('removeParticipant', participant)">

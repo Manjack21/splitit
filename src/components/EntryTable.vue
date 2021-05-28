@@ -4,9 +4,9 @@
         <h2>Saved Entries</h2>
         <div class="w3-row w3-border-bottom">
             <div class="w3-col s1 w3-center">&darr;</div>
-            <div class="w3-col m2 w3-hide-small w3-center"><strong>Date</strong></div>
-            <div class="w3-col m6 s8 w3-center"><strong>Description</strong></div>
-            <div class="w3-col s3 w3-right-align"><strong>Amount</strong></div>
+            <div class="w3-col m2 w3-hide-small w3-center"><strong><i18n text-id="date" /></strong></div>
+            <div class="w3-col m6 s8 w3-center"><strong><i18n text-id="description" /></strong></div>
+            <div class="w3-col s3 w3-right-align"><strong><i18n text-id="amount" /></strong></div>
         </div>
         <div class="w3-border-bottom" v-for="entry in entries" :key="entry.key()">
             <div class="w3-row-padding">

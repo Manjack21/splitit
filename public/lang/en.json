@@ -1,0 +1,29 @@
+{
+    "addUser": "Add User",
+    "export": "Save Data",
+    "import": "Load Data",
+    "delete": "Clear Data",
+    
+    "receiver": "Receiver",
+    "name": "Name",
+    "date": "Date",
+    "amount": "Amount",
+    "description": "Description",
+    "factor": "Multiplicator (or people count)",
+    
+    "buyWhat": "What & where",
+    "buyDate": "Purchase date",
+    "buyAmount": "Total amount",
+    "buySubmit": "Yes, i've buyed that!",
+
+    "loadSaveFile": "Saved Data",
+    "loadSubmit": "Import File",
+
+    "repayAmount": "Amount",
+    "repayDate": "Repay date",
+    "repaySubmit": "Have your money",
+
+    "btnBuy": "I've buyed something",
+    "btnRepay": "I've repayed some money",
+    "btnDepts": "Show my depts"
+}

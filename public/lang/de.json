@@ -1,0 +1,29 @@
+{
+    "addUser": "Neuer Benutzer",
+    "export": "Exportieren",
+    "import": "Importieren",
+    "delete": "Neustart",
+    
+    "receiver": "Empfänger",
+    "name": "Name",
+    "date": "Datum",
+    "amount": "Betrag",
+    "description": "Beschreibung",
+    "factor": "Faktor (Anzahl Personen)",
+    
+    "buyWhat": "Was / Wo",
+    "buyDate": "Datum",
+    "buyAmount": "Betrag",
+    "buySubmit": "Jupp, das hab' ich gekauft",
+
+    "loadSaveFile": "Gespeicherte Daten",
+    "loadSubmit": "Datei importieren",
+
+    "repayAmount": "Betrag",
+    "repayDate": "Datum",
+    "repaySubmit": "Bitte schön",
+
+    "btnBuy": "Ich hab' was bezahlt",
+    "btnRepay": "Ich hab jmd. Geld gegeben",
+    "btnDepts": "Wer bekommt noch was?"
+}

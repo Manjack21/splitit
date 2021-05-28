@@ -7,16 +7,16 @@
     <main id="app" class="w3-container">
       <nav class="w3-container w3-bar">
         <div class="w3-bar-item w3-button w3-green" v-on:click="showModal('newParticipantModal')">
-            <img src="user.png" style="height:5rem;"> Add User
+            <img src="user.png" style="height:5rem;"> <i18n textId="addUser" />
         </div>
         <div class="w3-bar-item w3-button w3-green" v-on:click="exportData()">
-            <img src="export.png" style="height:5rem;"> Export
+            <img src="export.png" style="height:5rem;"> <i18n textId="export" />
         </div>
         <div class="w3-bar-item w3-button w3-green" v-on:click="showModal('importModal')">
-            <img src="import.png" style="height:5rem;"> Import
+            <img src="import.png" style="height:5rem;"> <i18n textId="import" />
         </div>
         <div class="w3-bar-item w3-button w3-red" v-on:click="resetData()">
-            <img src="delete.png" style="height:5rem;"> Clear Data
+            <img src="delete.png" style="height:5rem;"> <i18n textId="delete" />
         </div>
       </nav>
 
@@ -47,16 +47,16 @@
       <div class="w3-modal-content w3-padding" style="width:20rem; padding-top:3rem;">
         <span v-on:click="hideModal('newParticipantModal');" class="w3-button w3-display-topright">&times;</span>
         <p>
-          <label for="newParticipantName">Name: </label>
+          <label for="newParticipantName"><i18n text-id="name"/>: </label>
           <input class="w3-input w3-border" v-model="newParticipant.name" name="newParticipantName">
         </p>
         <p>
-          <label for="newParticipantFactor">Factor [aka. people count]: </label>
+          <label for="newParticipantFactor"><i18n text-id="factor"/>: </label>
           <input class="w3-input w3-border" v-model.number="newParticipant.factor" name="newParticipantFactor">
         </p>
         <p>
           <button class="w3-btn w3-block w3-green" v-on:click="addParticipant(); hideModal('newParticipantModal');">
-            Add User
+            <i18n text-id="addUser"/>
           </button>
         </p>
       </div>
@@ -66,20 +66,20 @@
       <div class="w3-modal-content w3-padding" style="width:20rem; padding-top:3rem;">
         <span v-on:click="hideModal('newBuyModal');" class="w3-button w3-display-topright">&times;</span>
         <p>
-          <label for="newBuyName">What &amp; where: </label>
+          <label for="newBuyName"><i18n text-id="buyWhat" />: </label>
           <input class="w3-input w3-border" v-model="newEntry.name" name="newBuyName">
         </p>
         <p>
-          <label for="newBuyDate">Purchase date: </label>
+          <label for="newBuyDate"><i18n text-id="buyDate" />: </label>
           <input class="w3-input w3-border" v-model="newEntry.date" type="date" name="newBuyDate">
         </p>
         <p>
-          <label for="newBuyAmount">Total amount: </label>
+          <label for="newBuyAmount"><i18n text-id="buyAmount" />: </label>
           <CurrencyInput v-model="newEntry.amount" />
         </p>
         <p>
           <button class="w3-btn w3-block w3-green" v-on:click="addEntry(); hideModal('newBuyModal');">
-            Yes, i've buyed that!
+            <i18n text-id="buySubmit" />
           </button>
         </p>
       </div>
@@ -89,12 +89,12 @@
       <div class="w3-modal-content w3-padding" style="width:20rem; padding-top:3rem;">
         <span v-on:click="hideModal('importModal');" class="w3-button w3-display-topright">&times;</span>
         <p>
-          <label for="importFile">Save File: </label>
+          <label for="importFile"><i18n text-id="loadSaveFile" />: </label>
           <input class="w3-input w3-border" type="file" id="importFile" name="importFile">
         </p>
         <p>
           <button class="w3-btn w3-block w3-green" v-on:click="importData(); hideModal('importModal');">
-            Import
+            <i18n text-id="loadSubmit" />
           </button>
         </p>
       </div>
@@ -106,14 +106,14 @@
         <span v-on:click="hideModal('newRepayModal');" class="w3-button w3-display-topright">&times;</span>
         <input v-model="newEntry.name" type="hidden" name="newRepayName">
         <p>
-          <label for="newRepayAmount">Total amount: </label>
+          <label for="newRepayAmount"><i18n text-id="repayAmount" />: </label>
           <CurrencyInput v-model="newEntry.amount" />
         </p>
         <p>
-          <label for="newRepayAmount">Repay date: </label>
+          <label for="newRepayAmount"><i18n text-id="repayDate" />: </label>
           <input class="w3-input" type="date" v-model="newEntry.date" />
         </p>
-        <p>Receiver {{receiverName}}</p>
+        <p><i18n text-id="receiver" /> {{receiverName}}</p>
         <div class="w3-cell-row">
           <div
             class="w3-card w3-cell w3-padding w3-margin"
@@ -128,7 +128,7 @@
         </div>
         <p>
           <button class="w3-btn w3-block w3-green" v-on:click="addEntry(); hideModal('newRepayModal');">
-            Have your money
+            <i18n text-id="repaySubmit" />
           </button>
         </p>
       </div>
