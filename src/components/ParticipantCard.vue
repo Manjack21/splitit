@@ -1,5 +1,5 @@
 <template>
-    <div class="w3-col s6 m3">
+    <div class="w3-col s12 m4">
         <div class="w3-container w3-display-container w3-border w3-padding">
                 <img src="user.png">
             <p><strong>{{participant.name}}</strong></p>
@@ -33,7 +33,7 @@ import Currency from './Currency.vue';
 
 export default {
   components: { Currency },
-    name:"Participant",
+    name:"ParticipantCard",
     data: function() {
         return {
             showParticipantEntries: false
@@ -42,52 +42,56 @@ export default {
     props: {
         participants: undefined,
         participant: undefined,
-        entries: undefined,
-        totalParts: Number
+        entries: undefined
     },
     computed: {
-        totalAmount: function() {
+        totalAmount: function() {            
             const pos = this.entries
-                .filter(e => e.payee == this.participant.id)
-                .reduce((t, c) => t += c.amount, 0);
-            const neg = this.entries
-                .filter(e => e.receiver == -1 | e.receiver == this.participant.id)
-                .reduce((t, c) => { 
-                    if(c.receiver == this.participant.id)
-                        return t + c.amount
-                    else
-                        return t + (c.amount / this.totalParts * this.participant.factor)
-                    },
-                    0);
-
-            return pos - neg;
+                .reduce((t, c) => {
+                    console.log("prev", this.participant.name , {from: c.payee, to: c.receiver, amount: c.amount}, t);
+                    t += c.totalAmount(this.participant.id, this.participant.factor, this.totalParts(c.excludes));
+                    console.log("after", this.participant.name, t);
+                    return t;
+                    }, 
+                    0
+                );
+            
+            return pos;
         }
     },
     methods: {
+        totalParts(excludes)
+        {
+            return this.participants
+                .filter(p => excludes === undefined || excludes.indexOf(p.id) == -1)
+                .reduce((t, p) => t += p.factor, 0);
+        },
         getParticipantDepts(otherPart){
             const pos = this.entries
-                .filter(e => e.payee == this.participant.id)
+                .filter(e => 
+                    e.payee == this.participant.id & e.excludes.indexOf(otherPart.id) == -1)
                 .reduce((t, c) => {
                     if(c.receiver == otherPart.id)
                         return t += c.amount
                     else if(c.receiver == -1)
-                        return t += (c.amount * otherPart.factor / this.totalParts);
+                        return t += (c.amount * otherPart.factor / this.totalParts(c.excludes));
                     else
                         return t;
                 },
-                0);          
+                0);
 
             const neg = this.entries
-                .filter(e => e.payee == otherPart.id)
+                .filter(e => e.payee == otherPart.id & e.excludes.indexOf(this.participant.id) == -1)
                 .reduce((t, c) => { 
                     if(c.receiver == this.participant.id)
                         return t + c.amount
                     else if(c.receiver == -1)
-                        return t + (c.amount * this.participant.factor / this.totalParts)
+                        return t + (c.amount * this.participant.factor / this.totalParts(c.excludes))
                     else
                         return t;
                     },
                     0);
+            console.log(pos, neg, this.entries);
 
             return neg - pos;
         },

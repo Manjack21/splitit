@@ -21,13 +21,12 @@
       </nav>
 
       <article class="w3-row-padding w3-margin" style="width:100%;">
-        <Participant
+        <ParticipantCard
           v-for="participant in participants"
           v-bind:key="participant.id"
           :participant="participant"
           :participants="participants"
           :entries="entries"
-          :totalParts="totalParts"
           v-on:removeParticipant="removeParticipant($event);"
           v-on:addRepayEntry="newEntry.payee = $event.id; newEntry.receiver = -1; newEntry.payeeName = $event.name; showModal('newRepayModal');"
           v-on:addBuyEntry="newEntry.payee = $event.id; newEntry.receiver = -1; newEntry.payeeName = $event.name; newEntry.name = ''; showModal('newBuyModal');"
@@ -36,7 +35,9 @@
       
       <EntryTable 
         :entries="entries"
-        v-on:removeEntry="removeEntry($event)" 
+        :participants="participants"
+        @removeEntry="removeEntry($event)" 
+        @updateEntry="saveData()"
         />
 
     </main>
@@ -116,6 +117,7 @@
         <div class="w3-cell-row">
           <div
             class="w3-card w3-cell w3-padding w3-margin"
+            :class="{'w3-pale-green' : (participant.id == newEntry.receiver)}"
             v-for="participant in participants.filter(p => p.id !== newEntry.payee)"
             :key="participant.id"
             @click="newEntry.receiver = participant.id; newEntry.name = `Payment from ${newEntry.payeeName} to ${participant.name}`;"
@@ -136,35 +138,40 @@
 </template>
 
 <script>
-import Participant from './components/Participant.vue'
+import ParticipantCard from './components/ParticipantCard.vue'
 import CurrencyInput from './components/CurrencyInput.vue'
 import EntryTable from './components/EntryTable.vue'
+import Participant from './models/Participant'
+import Entry from './models/Entry'
 
 export default {
   name: 'App',
   data: function() {
-    let savedData = JSON.parse(localStorage.getItem('splitItPool'));
-    if(savedData === null){
-      savedData = {
-        newParticipant: {
-          name: "",
-          factor: 1
-        },
-        newEntry: {
-          name: "",
-          amount: 0,
-          payee: -1,
-          date: (new Date()).toISOString().substring(0, 10),
-          receiver: -1
-        },
-        participants: [],
-        entries: []
-      }
+    
+    var appdata = {
+      newParticipant: new Participant(),
+      newEntry: new Entry(),
+      participants: [],
+      entries: []
     }
-    return savedData;
+    let savedData = JSON.parse(localStorage.getItem('splitItPool'));    
+    if(savedData !== null) {
+      appdata.participants = savedData.participants.map(p => {
+        var participant = new Participant();
+        Object.assign(participant, p);
+        return participant;
+      });
+      appdata.entries = savedData.entries.map(e => {
+        var entry = new Entry();
+        Object.assign(entry, e);
+        return entry;
+      });
+    }
+
+    return appdata;
   },
   components: {
-    Participant,
+    ParticipantCard,
     CurrencyInput,
     EntryTable
   },
@@ -174,16 +181,16 @@ export default {
     },
     receiverName() {
       const receiver = this.participants
-        .filter(p => p.id === this.newEntry.receiver)
-        .map(p => p.name);
-      if(receiver.length > 0) return receiver[0];
+        .find(p => p.id === this.newEntry.receiver)
+        ?.name;
+      if(receiver === null) return receiver;
       return "";
     }
   },
   methods: {
     addParticipant() {
-      const p = JSON.parse(JSON.stringify(this.newParticipant));
-      p.id = this.participants.reduce((t, c) => { if(c.id > t) return c.id; else return t}, 0) + 1;
+      const maxId = this.participants.reduce((t, c) => { if(c.id > t) return c.id; else return t}, 0) + 1;
+      let p = new Participant(maxId, this.newParticipant.name, this.newParticipant.factor)
       this.participants.push(p);
       this.saveData();
     },
@@ -203,10 +210,11 @@ export default {
     },
     addEntry() {
       const eId = this.entries.reduce((t, c) => { if(c.id > t) return c.id; else return t}, 0) + 1;
-      let nEntry = JSON.parse(JSON.stringify(this.newEntry));
-      nEntry.id = eId;
+      this.newEntry.id = eId;
+      this.newEntry.version = 0;
+      this.entries.push(this.newEntry);
 
-      this.entries.push(nEntry);
+      this.newEntry = new Entry();
       this.saveData();
     },
     removeEntry(entry) {
@@ -223,7 +231,6 @@ export default {
     saveData(content){
       if(content === undefined) content = JSON.stringify(this.$data);
 
-      console.log(content);
       localStorage.setItem('splitItPool', content);
     },
     resetData(){
