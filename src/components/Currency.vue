@@ -1,5 +1,5 @@
 <template>
-    <span>{{formatedAmount}} {{currency.symbol}}</span>
+    <span :class="{'w3-text-red': (value < 0), 'w3-text-green': (value >= 0)}">{{formatedAmount}} {{currency.symbol}}</span>
 </template>
 
 <script>
