@@ -2,7 +2,10 @@
     <div class="w3-col s12 m4">
         <div class="w3-container w3-display-container w3-border w3-padding">
                 <img src="user.png">
-            <p><strong>{{participant.name}}</strong></p>
+            <p>
+                <strong>{{participant.name}}</strong> <br/>
+                <small><i18n text-id="factor" />: {{participant.factor}} </small> 
+            </p>
             <p><currency :value="totalAmount" /></p>
             
             <div class="w3-block w3-button w3-green" v-on:click="$emit('addBuyEntry', participant)">
@@ -30,9 +33,10 @@
 
 <script>
 import Currency from './Currency.vue';
+import I18n from './I18n.vue';
 
 export default {
-  components: { Currency },
+  components: { Currency, I18n },
     name:"ParticipantCard",
     data: function() {
         return {
