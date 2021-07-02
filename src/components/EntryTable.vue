@@ -30,7 +30,9 @@
                         v-for="p in participants.filter(p=>entry.payee != p.id & entry.receiver == -1)" :key="p.id"
                         @click="toggleExclude(entry, p)"
                         >
-                        {{p.name}}
+                        {{p.name}} <span class="w3-border w3-round w3-small">
+                            <currency :value="participantAmount(getParticipant(entry.payee), entry)" />
+                        </span>
                     </span>
                 </div>
             </div>
@@ -51,6 +53,9 @@ export default {
         Currency
     },
     methods: {
+        participantAmount: function(p, e){
+            return e.totalAmount(p.id, p.factor, this.totalParts(e.excludes));
+        },
         getParticipant(id){
             return this.participants.find(p => p.id == id);
         },
@@ -77,6 +82,12 @@ export default {
         },
         formatAmount(amount) {
             return amount.toFixed(2).toLocaleString("de-DE");
+        },
+        totalParts(excludes)
+        {
+            return this.participants
+                .filter(p => excludes === undefined || excludes.indexOf(p.id) == -1)
+                .reduce((t, p) => t += p.factor, 0);
         }
     }
 }
