@@ -107,11 +107,15 @@
         <input v-model="newEntry.name" type="hidden" name="newRepayName">
         <p>
           <label for="newRepayAmount"><i18n text-id="repayAmount" />: </label>
-          <CurrencyInput v-model="newEntry.amount" />
+          <CurrencyInput v-model="newEntry.amount"/>
         </p>
         <p>
-          <label for="newRepayAmount"><i18n text-id="repayDate" />: </label>
-          <input class="w3-input" type="date" v-model="newEntry.date" />
+          <label for="newRepayDate"><i18n text-id="repayDate" />: </label>
+          <input class="w3-input" type="date" name="newRepayDate" v-model="newEntry.date" />
+        </p>
+        <p>
+          <label for="newRepayDescription"><i18n text-id="description" />: </label>
+          <input class="w3-input" type="text" name="newRepayDescription" v-model="newEntry.name" />
         </p>
         <p><i18n text-id="receiver" /> {{receiverName}}</p>
         <div class="w3-cell-row">
@@ -120,7 +124,7 @@
             :class="{'w3-pale-green' : (participant.id == newEntry.receiver)}"
             v-for="participant in participants.filter(p => p.id !== newEntry.payee)"
             :key="participant.id"
-            @click="newEntry.receiver = participant.id; newEntry.name = `Payment from ${newEntry.payeeName} to ${participant.name}`;"
+            @click="newEntry.receiver = participant.id; newEntry.name = `Payment from ${newEntry.payeeName} to ${participant.name} (${newEntry.name})`;"
             >
             <img src="user.png" style="width:5rem;">
             {{participant.name}}
