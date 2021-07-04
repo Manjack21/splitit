@@ -31,7 +31,7 @@
                         @click="toggleExclude(entry, p)"
                         >
                         {{p.name}} <span class="w3-border w3-round w3-small">
-                            <currency :value="participantAmount(getParticipant(entry.payee), entry)" />
+                            <currency :value="participantAmount(p, entry)" />
                         </span>
                     </span>
                 </div>
