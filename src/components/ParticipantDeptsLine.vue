@@ -1,7 +1,7 @@
 <template>
-    <span>
-        <I18n :textId="textReceivePay"/> <currency :absolute="true" :value="amount" /> <I18n :textId="textFromTo"/> {{receiverName}}
-    </span>
+    <div class="w3-container w3-border-bottom">
+        <I18n :textId="textReceivePay"/>&nbsp; <currency :absolute="true" :value="amount" />&nbsp; <I18n :textId="textFromTo"/>&nbsp; {{receiverName}}
+    </div>
 </template>
 
 <script>
