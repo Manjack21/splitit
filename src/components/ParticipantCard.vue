@@ -52,9 +52,7 @@ export default {
         totalAmount: function() {            
             const pos = this.entries
                 .reduce((t, c) => {
-                    console.log("prev", this.participant.name , {from: c.payee, to: c.receiver, amount: c.amount}, t);
                     t += c.totalAmount(this.participant.id, this.participant.factor, this.totalParts(c.excludes));
-                    console.log("after", this.participant.name, t);
                     return t;
                     }, 
                     0
@@ -95,7 +93,6 @@ export default {
                         return t;
                     },
                     0);
-            console.log(pos, neg, this.entries);
 
             return neg - pos;
         },

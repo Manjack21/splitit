@@ -29,7 +29,7 @@
           :entries="entries"
           v-on:removeParticipant="removeParticipant($event);"
           v-on:addRepayEntry="newEntry.payee = $event.id; newEntry.receiver = -1; newEntry.payeeName = $event.name; showModal('newRepayModal');"
-          v-on:addBuyEntry="newEntry.payee = $event.id; newEntry.receiver = -1; newEntry.payeeName = $event.name; newEntry.name = ''; showModal('newBuyModal');"
+          v-on:addBuyEntry="currentParticipant = $event.id; showNewBuyModal = true;"
           />
       </article>
       
@@ -48,28 +48,13 @@
       @close="showNewParticipantModal = false"
       @addParticipant="addParticipant($event)" />
 
-    <div id="newBuyModal" class="w3-modal">
-      <div class="w3-modal-content w3-padding" style="width:20rem; padding-top:3rem;">
-        <span v-on:click="hideModal('newBuyModal');" class="w3-button w3-display-topright">&times;</span>
-        <p>
-          <label for="newBuyName"><i18n text-id="buyWhat" />: </label>
-          <input class="w3-input w3-border" v-model="newEntry.name" name="newBuyName">
-        </p>
-        <p>
-          <label for="newBuyDate"><i18n text-id="buyDate" />: </label>
-          <input class="w3-input w3-border" v-model="newEntry.date" type="date" name="newBuyDate">
-        </p>
-        <p>
-          <label for="newBuyAmount"><i18n text-id="buyAmount" />: </label>
-          <CurrencyInput v-model="newEntry.amount" />
-        </p>
-        <p>
-          <button class="w3-btn w3-block w3-green" v-on:click="addEntry(); hideModal('newBuyModal');">
-            <i18n text-id="buySubmit" />
-          </button>
-        </p>
-      </div>
-    </div>
+    <new-buy-modal 
+      v-if="showNewBuyModal" 
+      :id="nextEntryId"
+      :payeeId="currentParticipant"
+      @addEntry="addEntry($event)"
+      @close="showNewBuyModal = false"
+      />
     
     <div id="importModal" class="w3-modal">
       <div class="w3-modal-content w3-padding" style="width:20rem; padding-top:3rem;">
@@ -134,16 +119,19 @@ import EntryTable from './components/EntryTable.vue'
 import Participant from './models/Participant'
 import Entry from './models/Entry'
 import NewParticipantModal from './components/NewParticipantModal.vue'
+import NewBuyModal from './components/NewBuyModal.vue'
 
 export default {
   name: 'App',
   data: function() {
     
     var appdata = {
+      currentParticipant: undefined,
       newEntry: new Entry(),
       participants: [],
       entries: [],
-      showNewParticipantModal: false
+      showNewParticipantModal: false,
+      showNewBuyModal: false
     }
     let savedData = JSON.parse(localStorage.getItem('splitItPool'));    
     if(savedData !== null) {
@@ -165,7 +153,8 @@ export default {
     ParticipantCard,
     CurrencyInput,
     EntryTable,
-    NewParticipantModal
+    NewParticipantModal,
+    NewBuyModal
   },
   computed: {
     totalParts() {
@@ -180,6 +169,9 @@ export default {
     },
     nextParticipantId() {
       return this.participants.reduce((t, c) => { if(c.id > t) return c.id; else return t}, 0) + 1;
+    },
+    nextEntryId() {
+      return this.entries.reduce((t, c) => { if(c.id > t) return c.id; else return t}, 0) + 1;
     }
   },
   methods: {
@@ -201,13 +193,8 @@ export default {
       this.participants.splice(pIdx, 1);
       this.saveData();
     },
-    addEntry() {
-      const eId = this.entries.reduce((t, c) => { if(c.id > t) return c.id; else return t}, 0) + 1;
-      this.newEntry.id = eId;
-      this.newEntry.version = 0;
-      this.entries.push(this.newEntry);
-
-      this.newEntry = new Entry();
+    addEntry(entry) {
+      this.entries.push(entry);
       this.saveData();
     },
     removeEntry(entry) {
