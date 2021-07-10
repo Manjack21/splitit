@@ -6,7 +6,7 @@
 
     <main id="app" class="w3-container">
       <nav class="w3-container w3-bar">
-        <div class="w3-bar-item w3-button w3-green" v-on:click="showModal('newParticipantModal')">
+        <div class="w3-bar-item w3-button w3-green" v-on:click="showNewParticipantModal = true">
             <img src="user.png" style="height:5rem;"> <i18n textId="addUser" />
         </div>
         <div class="w3-bar-item w3-button w3-green" v-on:click="exportData()">
@@ -42,25 +42,11 @@
 
     </main>
 
-
-    <div id="newParticipantModal" class="w3-modal">
-      <div class="w3-modal-content w3-padding" style="width:20rem; padding-top:3rem;">
-        <span v-on:click="hideModal('newParticipantModal');" class="w3-button w3-display-topright">&times;</span>
-        <p>
-          <label for="newParticipantName"><i18n text-id="name"/>: </label>
-          <input class="w3-input w3-border" v-model="newParticipant.name" name="newParticipantName">
-        </p>
-        <p>
-          <label for="newParticipantFactor"><i18n text-id="factor"/>: </label>
-          <input class="w3-input w3-border" v-model.number="newParticipant.factor" name="newParticipantFactor">
-        </p>
-        <p>
-          <button class="w3-btn w3-block w3-green" v-on:click="addParticipant(); hideModal('newParticipantModal');">
-            <i18n text-id="addUser"/>
-          </button>
-        </p>
-      </div>
-    </div>
+    <new-participant-modal 
+      v-if="showNewParticipantModal" 
+      :id="nextParticipantId"
+      @close="showNewParticipantModal = false"
+      @addParticipant="addParticipant($event)" />
 
     <div id="newBuyModal" class="w3-modal">
       <div class="w3-modal-content w3-padding" style="width:20rem; padding-top:3rem;">
@@ -147,16 +133,17 @@ import CurrencyInput from './components/CurrencyInput.vue'
 import EntryTable from './components/EntryTable.vue'
 import Participant from './models/Participant'
 import Entry from './models/Entry'
+import NewParticipantModal from './components/NewParticipantModal.vue'
 
 export default {
   name: 'App',
   data: function() {
     
     var appdata = {
-      newParticipant: new Participant(),
       newEntry: new Entry(),
       participants: [],
-      entries: []
+      entries: [],
+      showNewParticipantModal: false
     }
     let savedData = JSON.parse(localStorage.getItem('splitItPool'));    
     if(savedData !== null) {
@@ -177,7 +164,8 @@ export default {
   components: {
     ParticipantCard,
     CurrencyInput,
-    EntryTable
+    EntryTable,
+    NewParticipantModal
   },
   computed: {
     totalParts() {
@@ -189,13 +177,14 @@ export default {
         ?.name;
       if(receiver === null) return receiver;
       return "";
+    },
+    nextParticipantId() {
+      return this.participants.reduce((t, c) => { if(c.id > t) return c.id; else return t}, 0) + 1;
     }
   },
   methods: {
-    addParticipant() {
-      const maxId = this.participants.reduce((t, c) => { if(c.id > t) return c.id; else return t}, 0) + 1;
-      let p = new Participant(maxId, this.newParticipant.name, this.newParticipant.factor)
-      this.participants.push(p);
+    addParticipant(participant) {
+      this.participants.push(participant);
       this.saveData();
     },
     removeParticipant(participant) {
