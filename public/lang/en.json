@@ -4,6 +4,10 @@
     "import": "Load Data",
     "delete": "Clear Data",
     
+    "pay": "pay",
+    "to": "to",
+    "receive": "receive",
+    "from": "from",
     "receiver": "Receiver",
     "name": "Name",
     "date": "Date",

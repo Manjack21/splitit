@@ -4,6 +4,11 @@
     "import": "Importieren",
     "delete": "Neustart",
     
+    
+    "pay": "zahle",
+    "to": "an",
+    "receive": "bekomme",
+    "from": "von",
     "receiver": "Empfänger",
     "name": "Name",
     "date": "Datum",

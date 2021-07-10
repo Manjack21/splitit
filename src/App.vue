@@ -101,7 +101,6 @@ export default {
     
     var appdata = {
       currentParticipant: undefined,
-      newEntry: new Entry(),
       participants: [],
       entries: [],
       showNewParticipantModal: false,
@@ -134,13 +133,6 @@ export default {
   computed: {
     totalParts() {
       return this.participants.reduce((t,c) => t += c.factor, 0);
-    },
-    receiverName() {
-      const receiver = this.participants
-        .find(p => p.id === this.newEntry.receiver)
-        ?.name;
-      if(receiver === null) return receiver;
-      return "";
     },
     nextParticipantId() {
       return this.participants.reduce((t, c) => { if(c.id > t) return c.id; else return t}, 0) + 1;

@@ -7,6 +7,7 @@ export default {
     name: "Currency",
     props: {
         value: Number,
+        absolute: Boolean,
         locale: {
             type: String,
             default: function() {
@@ -25,7 +26,9 @@ export default {
     },
     computed: {        
         formatedAmount() {
-            return this.value.toFixed(2).toLocaleString(this.locale);
+            let result = this.value;
+            if(this.absolute) result = Math.abs(result);
+            return result.toFixed(2).toLocaleString(this.locale);
         }
     }
 }

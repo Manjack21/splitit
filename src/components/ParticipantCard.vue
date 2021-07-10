@@ -24,7 +24,7 @@
             
             <div v-if="showParticipantEntries" class="w3-container w3-border">
                 <div v-for="p in participants.filter(p => p.id != participant.id)" :key="p.id">
-                    <currency :value="getParticipantDepts(p)" /> to {{p.name}}
+                    <participant-depts-line :amount="getParticipantDepts(p)" :receiverName="p.name" />
                 </div>
             </div>
         </div>
@@ -34,9 +34,10 @@
 <script>
 import Currency from './Currency.vue';
 import I18n from './I18n.vue';
+import ParticipantDeptsLine from './ParticipantDeptsLine.vue';
 
 export default {
-  components: { Currency, I18n },
+  components: { Currency, I18n, ParticipantDeptsLine },
     name:"ParticipantCard",
     data: function() {
         return {
