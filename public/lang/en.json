@@ -22,6 +22,7 @@
     "repayAmount": "Amount",
     "repayDate": "Repay date",
     "repaySubmit": "Have your money",
+    "repayTemplate": "Payment from {payee} to {receiver}",
 
     "btnBuy": "I've buyed something",
     "btnRepay": "I've repayed some money",

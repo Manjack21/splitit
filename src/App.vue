@@ -28,7 +28,7 @@
           :participants="participants"
           :entries="entries"
           v-on:removeParticipant="removeParticipant($event);"
-          v-on:addRepayEntry="newEntry.payee = $event.id; newEntry.receiver = -1; newEntry.payeeName = $event.name; showModal('newRepayModal');"
+          v-on:addRepayEntry="currentParticipant = $event.id; showRepayModal = true;"
           v-on:addBuyEntry="currentParticipant = $event.id; showNewBuyModal = true;"
           />
       </article>
@@ -55,6 +55,15 @@
       @addEntry="addEntry($event)"
       @close="showNewBuyModal = false"
       />
+
+    <repay-modal     
+      v-if="showRepayModal" 
+      :id="nextEntryId"
+      :payeeId="currentParticipant"
+      :participants="participants"
+      @addEntry="addEntry($event)"
+      @close="showRepayModal = false"
+    />
     
     <div id="importModal" class="w3-modal">
       <div class="w3-modal-content w3-padding" style="width:20rem; padding-top:3rem;">
@@ -72,54 +81,19 @@
     </div>
 
 
-    <div id="newRepayModal" class="w3-modal">
-      <div class="w3-modal-content w3-padding" style="width:40rem; padding-top:3rem;">
-        <span v-on:click="hideModal('newRepayModal');" class="w3-button w3-display-topright">&times;</span>
-        <input v-model="newEntry.name" type="hidden" name="newRepayName">
-        <p>
-          <label for="newRepayAmount"><i18n text-id="repayAmount" />: </label>
-          <CurrencyInput v-model="newEntry.amount"/>
-        </p>
-        <p>
-          <label for="newRepayDate"><i18n text-id="repayDate" />: </label>
-          <input class="w3-input" type="date" name="newRepayDate" v-model="newEntry.date" />
-        </p>
-        <p>
-          <label for="newRepayDescription"><i18n text-id="description" />: </label>
-          <input class="w3-input" type="text" name="newRepayDescription" v-model="newEntry.name" />
-        </p>
-        <p><i18n text-id="receiver" /> {{receiverName}}</p>
-        <div class="w3-cell-row">
-          <div
-            class="w3-card w3-cell w3-padding w3-margin"
-            :class="{'w3-pale-green' : (participant.id == newEntry.receiver)}"
-            v-for="participant in participants.filter(p => p.id !== newEntry.payee)"
-            :key="participant.id"
-            @click="newEntry.receiver = participant.id; newEntry.name = `Payment from ${newEntry.payeeName} to ${participant.name} (${newEntry.name})`;"
-            >
-            <img src="user.png" style="width:5rem;">
-            {{participant.name}}
-          </div>
-        </div>
-        <p>
-          <button class="w3-btn w3-block w3-green" v-on:click="addEntry(); hideModal('newRepayModal');">
-            <i18n text-id="repaySubmit" />
-          </button>
-        </p>
-      </div>
-    </div>
+    
 
   </div>
 </template>
 
 <script>
 import ParticipantCard from './components/ParticipantCard.vue'
-import CurrencyInput from './components/CurrencyInput.vue'
 import EntryTable from './components/EntryTable.vue'
 import Participant from './models/Participant'
 import Entry from './models/Entry'
 import NewParticipantModal from './components/NewParticipantModal.vue'
 import NewBuyModal from './components/NewBuyModal.vue'
+import RepayModal from './components/RepayModal.vue'
 
 export default {
   name: 'App',
@@ -131,7 +105,8 @@ export default {
       participants: [],
       entries: [],
       showNewParticipantModal: false,
-      showNewBuyModal: false
+      showNewBuyModal: false,
+      showRepayModal: false
     }
     let savedData = JSON.parse(localStorage.getItem('splitItPool'));    
     if(savedData !== null) {
@@ -151,10 +126,10 @@ export default {
   },
   components: {
     ParticipantCard,
-    CurrencyInput,
     EntryTable,
     NewParticipantModal,
-    NewBuyModal
+    NewBuyModal,
+    RepayModal
   },
   computed: {
     totalParts() {
@@ -215,6 +190,7 @@ export default {
     },
     resetData(){
       localStorage.removeItem('splitItPool');
+      window.location.reload();
     },
     exportData(){
       var element = document.createElement('a');

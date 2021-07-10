@@ -8,7 +8,12 @@ export default class Language
     }
     
     text(){
-        return this.loadPromise;                
+        return this.loadPromise;
+    }
+
+    async translate(textId) {
+        let texts = await this.text();
+        return texts[textId]
     }
     
 }

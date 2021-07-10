@@ -22,6 +22,7 @@
     "repayAmount": "Betrag",
     "repayDate": "Datum",
     "repaySubmit": "Bitte schön",
+    "repayTemplate": "{payee} gab {receiver} Geld",
 
     "btnBuy": "Ich hab' was bezahlt",
     "btnRepay": "Ich hab jmd. Geld gegeben",
