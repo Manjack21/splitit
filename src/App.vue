@@ -207,6 +207,7 @@ export default {
       };
       reader.readAsText(fname);
       this.hideModal("importModal")
+      window.location.reload();
     }
   }
 }
