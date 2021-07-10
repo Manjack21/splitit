@@ -24,7 +24,7 @@
             
             <div v-if="showParticipantEntries" class="w3-container w3-border">
                 <div v-for="p in participants.filter(p => p.id != participant.id)" :key="p.id">
-                    <participant-depts-line :amount="getParticipantDepts(p)" :receiverName="p.name" />
+                    <participant-depts-line :amount="getParticipantDepts(p) * -1" :receiverName="p.name" />
                 </div>
             </div>
         </div>

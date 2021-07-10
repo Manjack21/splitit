@@ -1,5 +1,5 @@
 <template>
-    <span :class="{'w3-text-red': (value < 0), 'w3-text-green': (value >= 0)}">{{formatedAmount}} {{currency.symbol}}</span>
+    <span :class="{'w3-text-red': (value < 0 & colored), 'w3-text-green': (value >= 0 & colored)}">{{formatedAmount}} {{currency.symbol}}</span>
 </template>
 
 <script>
@@ -8,6 +8,10 @@ export default {
     props: {
         value: Number,
         absolute: Boolean,
+        colored: {
+            type: Boolean,
+            default: true
+        },
         locale: {
             type: String,
             default: function() {
