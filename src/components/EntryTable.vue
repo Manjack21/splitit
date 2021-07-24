@@ -8,7 +8,7 @@
             <div class="w3-col m6 s8 w3-center"><strong><i18n text-id="description" /></strong></div>
             <div class="w3-col s3 w3-right-align"><strong><i18n text-id="amount" /></strong></div>
         </div>
-        <div class="w3-border-bottom" v-for="entry in entries" :key="entry.key()">
+        <div class="w3-border-bottom" v-for="entry in sortedEntries" :key="entry.key()">
             <div class="w3-row-padding">
                 <div class="w3-col s1">
                     <span class="w3-button w3-hover-red" @click="$emit('removeEntry', entry)">&times;</span>
@@ -52,6 +52,13 @@ export default {
     components:{
         Currency
     },
+    computed: {
+        sortedEntries: function() {
+            return this.entries
+                .slice()
+                .sort((first, second) => new Date(first.date) - new Date(second.date));
+        }
+    },
     methods: {
         participantAmount: function(p, e){
             return e.totalAmount(p.id, p.factor, this.totalParts(e.excludes));
@@ -71,7 +78,7 @@ export default {
 
             if(pIdx > -1)
             {
-                entry.excludes.splice(pIdx, 1);                
+                entry.excludes.splice(pIdx, 1);
             }
             else
             {
